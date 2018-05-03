@@ -19,18 +19,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import java.util.ArrayList;
 ////////////////////////////////////////////////////////////////////////////
-//Semester:         CS400 Spring 2018
-//PROJECT:          Tournament Bracket GUI
+// Semester: CS400 Spring 2018
+// PROJECT: Tournament Bracket GUI
 //
-//Authors:          Steven Wood, Jacob Latts, Ben Schulman, Dylan Breon
+// Authors: Steven Wood, Jacob Latts, Ben Schulman, Dylan Breon
 //
-//Instructor:       Deb Deppeler (deppeler@cs.wisc.edu)
-//Bugs:             No known bugs
+// Instructor: Deb Deppeler (deppeler@cs.wisc.edu)
+// Bugs: No known bugs
 //
-//2018 Apr 23, 2018 Sixteen.java
+// 2018 Apr 23, 2018 Sixteen.java
 ////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -38,59 +37,67 @@ import java.util.ArrayList;
  */
 public class SixteenTeams extends Scene {
 
-	/**
-	 * Constructor that generates a GUI for the four teams in the given teams ArrayList.
-	 * 
-	 * @param root - BorderPane that is the root of the GUI
-	 * @param width - width of GUI
-	 * @param height - height of GUI
-	 * @param fill - Color to fill as background
-	 * @param teams - List of all teams participating in tournament. Length should be four.
-	 */
-	public SixteenTeams(Parent root, double width, double height, Paint fill, ArrayList<Team> teams) {
-		super(root, width, height, fill);
+    /**
+     * Constructor that generates a GUI for the four teams in the given teams ArrayList.
+     * 
+     * @param root - BorderPane that is the root of the GUI
+     * @param width - width of GUI
+     * @param height - height of GUI
+     * @param fill - Color to fill as background
+     * @param teams - List of all teams participating in tournament. Length should be four.
+     */
+    public SixteenTeams(Parent root, double width, double height, Paint fill,
+                    ArrayList<Team> teams) {
+        super(root, width, height, fill);
 
-		// References to losers of semi-finals games in order to report 3rd place team at end
-		Team gameOneLoser = new Team();
-		Team gameTwoLoser = new Team();
-		
-		//Creating GridPane
-		GridPane gPane = new GridPane();
-		gPane.getRowConstraints().add(new RowConstraints(15));
-		gPane.setGridLinesVisible(false);
-		
-		/*
-		 * The actual content of the scene will be stored in borderPane,
-		 * which is a BorderPane sitting in the root ScrollPane
-		 */
-		ScrollPane scrollPane = ((ScrollPane) root);
-		BorderPane borderPane = new BorderPane();
-		scrollPane.setContent(borderPane);
-		borderPane.setCenter(gPane);
-		gPane.setAlignment(Pos.CENTER);
-		gPane.getStyleClass().add("pane");
+        // References to losers of semi-finals games in order to report 3rd place team at end
+        Team gameOneLoser = new Team();
+        Team gameTwoLoser = new Team();
 
-		// Drop Shadow effect for the "Tournament Bracket" Title
-		DropShadow shad = new DropShadow();
-		shad.setOffsetY(3.0f);
-		shad.setColor(Color.color(0.4f, 0.4f, 0.4f));
+        // Creating GridPane
+        GridPane gPane = new GridPane();
+        gPane.getRowConstraints().add(new RowConstraints(15));
+        gPane.setGridLinesVisible(false);
 
-		// Large Title at top of scene
-		Text title = new Text("Tournament Bracket");
-		title.setId("fancytext");
-		title.setEffect(shad);
-		borderPane.setTop(title);
-		borderPane.setAlignment(title, Pos.CENTER);
+        /*
+         * The actual content of the scene will be stored in borderPane, which is a BorderPane
+         * sitting in the root ScrollPane
+         * 
+         */
+        ScrollPane scrollPane = ((ScrollPane) root);
+        BorderPane borderPane = new BorderPane();
+        scrollPane.setContent(borderPane);
+        borderPane.setCenter(gPane);
+        gPane.setAlignment(Pos.CENTER);
+        gPane.getStyleClass().add("pane");
 
-		// Instructions, text to show user how to use the bracket
-		Label info = new Label();
-		info.setText(
-				"INSTRUCTIONS:\n-For each game: Enter each team's score then \n   click submit button between the two teams.\n-After completing all games for a round, move\n    on to next round and repeat process to enter teams' scores.\n After submitting the scores for the championship game the \n   top three contenders will be displayed!");
-		info.setFont(Font.font("Ariel", 15));
-		borderPane.setLeft((info));
-		borderPane.setAlignment(info, Pos.CENTER);
+        // Drop Shadow effect for the "Tournament Bracket" Title
+        DropShadow shad = new DropShadow();
+        shad.setOffsetY(3.0f);
+        shad.setColor(Color.color(0.4f, 0.4f, 0.4f));
 
-		  // Column headers for rounds
+        // Large Title at top of scene
+        Text title = new Text("Tournament Bracket");
+        title.setId("fancytext");
+        title.setEffect(shad);
+        borderPane.setTop(title);
+        borderPane.setAlignment(title, Pos.CENTER);
+
+        // Instructions, text to show user how to use the bracket
+        Label info = new Label();
+        info.setText("INSTRUCTIONS:\n-For each game: Enter each team's score then \n   click"
+                        + " submit button between the two teams.\n-Scores must be positive"
+                        + " number and games \n   can not result in a tie\n-After " + ""
+                        + "completing all games for a " + ""
+                        + "round, move\n   on to next round and repeat process to " + ""
+                        + "enter teams' scores.\n After submitting the " + ""
+                        + "scores for the championship " + "" + "game the \n   "
+                        + "top three contenders will be displayed!");
+        info.setFont(Font.font("Ariel", 15));
+        borderPane.setRight((info));
+        borderPane.setAlignment(info, Pos.CENTER);
+
+        // Column headers for rounds
         // See helper method below
         Text round1 = createRoundHeader("Round 1");
         Text round2 = createRoundHeader("Round 2");
@@ -156,7 +163,7 @@ public class SixteenTeams extends Scene {
         // Third place Label to display runnerUp of tournament
         Label thirdPlace = new Label();
         thirdPlace.setMinHeight(25);
-        thirdPlace.setText("Third: ");
+        thirdPlace.setText("Third Place: ");
 
         // Round 1 Score Input fields creation.
         // See helper method below
@@ -177,7 +184,8 @@ public class SixteenTeams extends Scene {
         TextField round1Score15 = createScoreInput("15");
         TextField round1Score16 = createScoreInput("16");
 
-        // Enabling the score inputs for round 1 since, by default, the input labels are disabled
+        // Enabling the score inputs for round 1 since, by default,
+        // the input labels are disabled
         round1Score1.setDisable(false);
         round1Score2.setDisable(false);
         round1Score3.setDisable(false);
@@ -275,17 +283,23 @@ public class SixteenTeams extends Scene {
                     champ.setText("Champion: ");
                     runnerUp.setText("Runner Up: ");
 
-                    int team1score = Integer.parseInt(round4Score1.getText().trim());
-                    int team2score = Integer.parseInt(round4Score2.getText().trim());
+                    int team1Score = Integer.parseInt(round4Score1.getText().trim());
+                    int team2Score = Integer.parseInt(round4Score2.getText().trim());
 
-                    if (team1score > team2score) {
+                    if (team1Score == team2Score) {
+                        createInvalidInputAlert("Score cannot be a tie!");
+                        return;
+                    }
+                    if (team1Score < 0 || team2Score < 0) { // Ensuring score input is non-negative
+                        createInvalidInputAlert("Scores must be positive!");
+                    } else if (team1Score > team2Score) {
                         champ.setText("Champion: " + winner13.getText());
                         runnerUp.setText("Runner Up: " + winner14.getText());
-                    } else if (team1score < team2score) {
+                    } else if (team1Score < team2Score) {
                         champ.setText("Champion: " + winner14.getText());
                         runnerUp.setText("Runner Up: " + winner13.getText());
                     } else {
-                        System.out.println("Teams may not have the same score");
+                        createInvalidInputAlert("Invalid Score Input!");
                     }
 
                     if (gameOneLoser.getTeamScore() > gameTwoLoser.getTeamScore())
@@ -294,7 +308,7 @@ public class SixteenTeams extends Scene {
                         thirdPlace.setText("Third: " + gameTwoLoser.getTeamName());
 
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid Score");
+                    createInvalidInputAlert("Invalid Score Input!");
                 }
 
             }
@@ -309,7 +323,7 @@ public class SixteenTeams extends Scene {
         emptyCol2.setMinWidth(20);
         emptyCol3.setMinWidth(20);
 
-        //Adding column headers for each round to grid pane
+        // Adding column headers for each round to grid pane
         gPane.add(round1, 0, 0);
         gPane.add(round2, 3, 0);
         gPane.add(round3, 6, 0);
@@ -355,7 +369,7 @@ public class SixteenTeams extends Scene {
 
         gPane.add(emptyCol1, 2, 0, 1, 32);
 
-        //Adding round 2 team labels to grid pane  
+        // Adding round 2 team labels to grid pane
         gPane.add(winner1, 3, 3);
         gPane.add(winner2, 3, 7);
         gPane.add(winner3, 3, 11);
@@ -404,7 +418,7 @@ public class SixteenTeams extends Scene {
         gPane.add(runnerUp, 12, 31);
         gPane.add(thirdPlace, 12, 32);
 
-        // Adding round 1 submit buttons 
+        // Adding round 1 submit buttons
         gPane.add(submit1, 0, 3, 2, 1);
         gPane.add(submit2, 0, 7, 2, 1);
         gPane.add(submit3, 0, 11, 2, 1);
@@ -413,18 +427,18 @@ public class SixteenTeams extends Scene {
         gPane.add(submit6, 0, 23, 2, 1);
         gPane.add(submit7, 0, 27, 2, 1);
         gPane.add(submit8, 0, 31, 2, 1);
-        
-     // Adding round 2 submit buttons 
+
+        // Adding round 2 submit buttons
         gPane.add(submit9, 3, 5, 2, 1);
         gPane.add(submit10, 3, 13, 2, 1);
         gPane.add(submit11, 3, 21, 2, 1);
         gPane.add(submit12, 3, 29, 2, 1);
-        
-     // Adding round 3 submit buttons 
+
+        // Adding round 3 submit buttons
         gPane.add(submit13, 6, 9, 2, 1);
         gPane.add(submit14, 6, 25, 2, 1);
-        
-     // Adding round 4 (championship) submit buttons 
+
+        // Adding round 4 (championship) submit buttons
         gPane.add(submit15, 9, 17, 2, 1);
 
 
@@ -477,14 +491,14 @@ public class SixteenTeams extends Scene {
                     int team1Score = Integer.parseInt(score1.getText().trim());
                     int team2Score = Integer.parseInt(score2.getText().trim());
 
-                    if(team1Score == team2Score) {
+                    if (team1Score == team2Score) {
                         createInvalidInputAlert("Score cannot be a tie!");
                         return;
                     }
                     if (team1Score < 0 || team2Score < 0) { // Ensuring score input is non-negative
                         createInvalidInputAlert("Scores must be positive!");
                     } else if (team1Score > team2Score) {
-                        winner.setText(teams.get(team1Index).getTeamName()); // Updating winner              
+                        winner.setText(teams.get(team1Index).getTeamName()); // Updating winner
                         nextTextField.setDisable(false);
                     } else if (team1Score < team2Score) {
                         winner.setText(teams.get(team2Index).getTeamName());
@@ -547,12 +561,12 @@ public class SixteenTeams extends Scene {
 
                     int team1Score = Integer.parseInt(score1.getText().trim());
                     int team2Score = Integer.parseInt(score2.getText().trim());
-                    
-                    if(team1Score == team2Score) {
+
+                    if (team1Score == team2Score) {
                         createInvalidInputAlert("Score cannot be a tie!");
                         return;
                     }
-                    
+
 
                     if (team1Score < 0 || team2Score < 0) {
                         createInvalidInputAlert("Scores must be positive!");
@@ -613,8 +627,8 @@ public class SixteenTeams extends Scene {
                     // Getting score results from text fields
                     int team1Score = Integer.parseInt(score1.getText().trim());
                     int team2Score = Integer.parseInt(score2.getText().trim());
-                    
-                    if(team1Score == team2Score) {
+
+                    if (team1Score == team2Score) {
                         createInvalidInputAlert("Score cannot be a tie!");
                         return;
                     }
@@ -644,11 +658,11 @@ public class SixteenTeams extends Scene {
         });
         return submit;
     }
+
     /*
-     * Creates and shows an alert to inform user that their input for scores
-     * was invalid
+     * Creates and shows an alert to inform user that their input for scores was invalid
      * 
-     * @param message Text to be displayed under the header 
+     * @param message Text to be displayed under the header
      */
     private void createInvalidInputAlert(String message) {
         Alert a = new Alert(AlertType.ERROR);
