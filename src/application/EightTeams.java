@@ -221,10 +221,15 @@ public class EightTeams extends Scene {
 
                     // Determining 3rd place of tournament based of scores of the losers of semi
                     // finals
-                    if (gameOneLoser.getTeamScore() > gameTwoLoser.getTeamScore())
+                    if (gameOneLoser.getTeamScore() > gameTwoLoser.getTeamScore()) {
+                        System.out.println(gameOneLoser.getTeamName());
                         thirdPlace.setText("Third: " + gameOneLoser.getTeamName());
-                    else
+                    }
+
+                    else {
+                        System.out.println(gameTwoLoser.getTeamName());
                         thirdPlace.setText("Third: " + gameTwoLoser.getTeamName());
+                    }
 
                 } catch (NumberFormatException e) {
                     createInvalidInputAlert("Invalid Score Input!");
@@ -441,6 +446,8 @@ public class EightTeams extends Scene {
                         winner.setText(contestant1.getText()); // Updating winner label to winning
                                                                // team
                         nextTextField.setDisable(false);
+                        loser.setTeamName(contestant2.getText());
+                        loser.setTeamScore(team2Score);
 
                     } else if (team1Score < team2Score) {
                         winner.setText(contestant2.getText());
@@ -450,6 +457,8 @@ public class EightTeams extends Scene {
                     } else {
                         createInvalidInputAlert("Invalid Score Input!");
                     }
+                    
+               
 
                 } catch (NumberFormatException e) {
                     createInvalidInputAlert("Invalid Score Input!");
