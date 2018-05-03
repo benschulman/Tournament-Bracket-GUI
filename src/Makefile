@@ -4,7 +4,7 @@ all:
 
 run:
 	javac application/*.java
-	java application.Main teamList.txt
+	java -jar ../executable.jar teamList.txt
 	
 clean:
 	\rm application/*.class
