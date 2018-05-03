@@ -5,10 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -142,20 +139,27 @@ public class TwoTeams extends Scene {
                     int team1score = Integer.parseInt(score1.getText().trim());
                     int team2score = Integer.parseInt(score2.getText().trim());
 
+
+                    if (team1score == team2score) {
+                        createInvalidInputAlert("Score cannot be a tie!");
+                        return;
+                    }
                     // Do different tasks depending on who won
-                    if (team1score > team2score) {
+                    if (team1score < 0 || team2score < 0) { // Ensuring score input is non-negative
+                        createInvalidInputAlert("Scores must be positive!");
+                    } else if (team1score > team2score) {
                         champ.setText("Champion: " + teams.get(0).getTeamName());
                         runnerUp.setText("Runner Up: " + teams.get(1).getTeamName());
                     } else if (team1score < team2score) {
                         champ.setText(("Champion: " + teams.get(1).getTeamName()));
                         runnerUp.setText("Runner Up: " + teams.get(0).getTeamName());
                     } else {
-                        System.out.println("Teams may not have the same score");
+                        createInvalidInputAlert("Invalid Score Input!");
                     }
                 }
                 // Score entered was not a number so the game cannot be scored
                 catch (NumberFormatException e) {
-                    System.out.println("Invalid Score");
+                    createInvalidInputAlert("Invalid Score Input!");
                 }
 
             }
@@ -181,6 +185,18 @@ public class TwoTeams extends Scene {
 
 
 
+    }
+
+    /*
+     * Creates and shows an alert to inform user that their input for scores was invalid
+     *
+     * @param message Text to be displayed under the header
+     */
+    private void createInvalidInputAlert(String message) {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setHeaderText("Invalid Input");
+        a.setContentText(message);
+        a.show();
     }
 
     /*
