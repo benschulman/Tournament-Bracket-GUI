@@ -1,12 +1,12 @@
 package application;
 
 import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -50,7 +50,7 @@ public class SixteenTeams extends Scene {
 	public SixteenTeams(Parent root, double width, double height, Paint fill, ArrayList<Team> teams) {
 		super(root, width, height, fill);
 
-		// Referenes to losers of semi-finals games in order to report 3rd place team at end
+		// References to losers of semi-finals games in order to report 3rd place team at end
 		Team gameOneLoser = new Team();
 		Team gameTwoLoser = new Team();
 		
@@ -232,9 +232,9 @@ public class SixteenTeams extends Scene {
                         winner13, "13", round1Score5, round1Score6, 3, 12, champ, runnerUp);
         Button submit4 = createSubmitButton(teams, round2Score4, winner4, "4", winner10, "10",
                         winner13, "13", round1Score7, round1Score8, 4, 11, champ, runnerUp);
-        Button submit5 = createSubmitButton(teams, round2Score5, winner5, "1", winner11, "11",
+        Button submit5 = createSubmitButton(teams, round2Score5, winner5, "5", winner11, "11",
                         winner14, "14", round1Score9, round1Score10, 1, 14, champ, runnerUp);
-        Button submit6 = createSubmitButton(teams, round2Score6, winner6, "1", winner11, "11",
+        Button submit6 = createSubmitButton(teams, round2Score6, winner6, "6", winner11, "11",
                         winner14, "14", round1Score11, round1Score12, 6, 9, champ, runnerUp);
         Button submit7 = createSubmitButton(teams, round2Score7, winner7, "7", winner12, "12",
                         winner14, "14", round1Score13, round1Score14, 2, 13, champ, runnerUp);
@@ -309,6 +309,7 @@ public class SixteenTeams extends Scene {
         emptyCol2.setMinWidth(20);
         emptyCol3.setMinWidth(20);
 
+        //Adding column headers for each round to grid pane
         gPane.add(round1, 0, 0);
         gPane.add(round2, 3, 0);
         gPane.add(round3, 6, 0);
@@ -354,7 +355,7 @@ public class SixteenTeams extends Scene {
 
         gPane.add(emptyCol1, 2, 0, 1, 32);
 
-        // Adding round 2 team labels to grid pane
+        //Adding round 2 team labels to grid pane  
         gPane.add(winner1, 3, 3);
         gPane.add(winner2, 3, 7);
         gPane.add(winner3, 3, 11);
@@ -403,7 +404,7 @@ public class SixteenTeams extends Scene {
         gPane.add(runnerUp, 12, 31);
         gPane.add(thirdPlace, 12, 32);
 
-        // Adding the submit buttons
+        // Adding round 1 submit buttons 
         gPane.add(submit1, 0, 3, 2, 1);
         gPane.add(submit2, 0, 7, 2, 1);
         gPane.add(submit3, 0, 11, 2, 1);
@@ -412,12 +413,18 @@ public class SixteenTeams extends Scene {
         gPane.add(submit6, 0, 23, 2, 1);
         gPane.add(submit7, 0, 27, 2, 1);
         gPane.add(submit8, 0, 31, 2, 1);
+        
+     // Adding round 2 submit buttons 
         gPane.add(submit9, 3, 5, 2, 1);
         gPane.add(submit10, 3, 13, 2, 1);
         gPane.add(submit11, 3, 21, 2, 1);
         gPane.add(submit12, 3, 29, 2, 1);
+        
+     // Adding round 3 submit buttons 
         gPane.add(submit13, 6, 9, 2, 1);
         gPane.add(submit14, 6, 25, 2, 1);
+        
+     // Adding round 4 (championship) submit buttons 
         gPane.add(submit15, 9, 17, 2, 1);
 
 
@@ -438,7 +445,7 @@ public class SixteenTeams extends Scene {
      * @param winner The winner of this game
      * @param winnerNum The number of the winner label. To reset winner label
      * @param nextWinner The winner of next rounds game. Used to reset label
-     * @param nextWinnerNum Number of the winner of next rounds game. Used to reset label
+     * @param nextwinnerNum Number of the winner of next rounds game. Used to reset label
      * @param futureWinner The winner of the game 2 rounds from now. Used to reset label
      * @param futureWinnerNum Number of the winner of game 2 rounds from now. Used to reset label
      * @param score1 Score of first team in this game
@@ -469,27 +476,25 @@ public class SixteenTeams extends Scene {
                     // Getting score results from text fields
                     int team1Score = Integer.parseInt(score1.getText().trim());
                     int team2Score = Integer.parseInt(score2.getText().trim());
+
                     if(team1Score == team2Score) {
-                    	createInvalidInputAlert("Score cannot be a tie!");
-                    	return;
+                        createInvalidInputAlert("Score cannot be a tie!");
+                        return;
                     }
-                    
                     if (team1Score < 0 || team2Score < 0) { // Ensuring score input is non-negative
                         createInvalidInputAlert("Scores must be positive!");
                     } else if (team1Score > team2Score) {
-                        winner.setText(teams.get(team1Index).getTeamName()); // Updating winner
-                                                                             // label to winning
-                        // team
+                        winner.setText(teams.get(team1Index).getTeamName()); // Updating winner              
                         nextTextField.setDisable(false);
                     } else if (team1Score < team2Score) {
                         winner.setText(teams.get(team2Index).getTeamName());
                         nextTextField.setDisable(false);
                     } else {
-                        System.out.println("Teams may not have the same score");
+                        createInvalidInputAlert("Invalid Score Input!");
                     }
 
                 } catch (NumberFormatException e) {
-                	createInvalidInputAlert("Scores must be numbers!");
+                    createInvalidInputAlert("Invalid Score Input!");
                 }
 
             }
@@ -512,7 +517,7 @@ public class SixteenTeams extends Scene {
      * @param winner The winner of this game
      * @param winnerNum The number of the winner label. To reset winner label
      * @param nextWinner The winner of next rounds game. Used to reset label
-     * @param nextWinnerNum Number of the winner of next rounds game. Used to reset label
+     * @param nextwinnerNum Number of the winner of next rounds game. Used to reset label
      * @param score1 Score of first team in this game
      * @param score2 Score of second team in this game
      * @param contestant1 The first competitor
@@ -542,11 +547,13 @@ public class SixteenTeams extends Scene {
 
                     int team1Score = Integer.parseInt(score1.getText().trim());
                     int team2Score = Integer.parseInt(score2.getText().trim());
+                    
                     if(team1Score == team2Score) {
-                    	createInvalidInputAlert("Score cannot be a tie!");
-                    	return;
+                        createInvalidInputAlert("Score cannot be a tie!");
+                        return;
                     }
                     
+
                     if (team1Score < 0 || team2Score < 0) {
                         createInvalidInputAlert("Scores must be positive!");
                     } else if (team1Score > team2Score) {
@@ -556,11 +563,11 @@ public class SixteenTeams extends Scene {
                         winner.setText(contestant2.getText());
                         nextTextField.setDisable(false);
                     } else {
-                        System.out.println("Teams may not have the same score");
+                        createInvalidInputAlert("Invalid Score Input!");
                     }
 
                 } catch (NumberFormatException e) {
-                	createInvalidInputAlert("Scores must be numbers!");
+                    createInvalidInputAlert("Invalid Score Input!");
                 }
 
             }
@@ -606,11 +613,12 @@ public class SixteenTeams extends Scene {
                     // Getting score results from text fields
                     int team1Score = Integer.parseInt(score1.getText().trim());
                     int team2Score = Integer.parseInt(score2.getText().trim());
-
+                    
                     if(team1Score == team2Score) {
-                    	createInvalidInputAlert("Score cannot be a tie!");
-                    	return;
+                        createInvalidInputAlert("Score cannot be a tie!");
+                        return;
                     }
+
                     if (team1Score < 0 || team2Score < 0) { // Ensuring score input is non-negative
                         createInvalidInputAlert("Scores must be positive!");
                     } else if (team1Score > team2Score) {
@@ -625,18 +633,17 @@ public class SixteenTeams extends Scene {
                         loser.setTeamName(contestant1.getText());
                         loser.setTeamScore(team1Score);
                     } else {
-                        System.out.println("Teams may not have the same score");
+                        createInvalidInputAlert("Invalid Score Input!");
                     }
 
                 } catch (NumberFormatException e) {
-                	createInvalidInputAlert("Scores must be numbers!");
+                    createInvalidInputAlert("Invalid Score Input!");
                 }
 
             }
         });
         return submit;
     }
-    
     /*
      * Creates and shows an alert to inform user that their input for scores
      * was invalid
@@ -644,11 +651,12 @@ public class SixteenTeams extends Scene {
      * @param message Text to be displayed under the header 
      */
     private void createInvalidInputAlert(String message) {
-    	Alert a = new Alert(AlertType.ERROR);
+        Alert a = new Alert(AlertType.ERROR);
         a.setHeaderText("Invalid Input");
         a.setContentText(message);
         a.show();
     }
+
     /*
      * Used to create Text fields for score input. Sets size, Prompt text, etc.
      * 
