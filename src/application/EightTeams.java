@@ -48,6 +48,7 @@ public class EightTeams extends Scene {
     public EightTeams(Parent root, double width, double height, Paint fill, ArrayList<Team> teams) {
         super(root, width, height, fill);
 
+        // References to losers of semi-finals games in order to report 3rd place team at end
         Team gameOneLoser = new Team();
         Team gameTwoLoser = new Team();
 
@@ -78,10 +79,18 @@ public class EightTeams extends Scene {
         borderPane.setTop(title);
         borderPane.setAlignment(title, Pos.CENTER);
 
+        // Instructions, text to show user how to use the bracket
         Label info = new Label();
-        info.setText("INSTRUCTIONS:\n-For each game: Enter each team's score then \n   click submit button between the two teams.\n-After completing all games for a round, move\n    on to next round and repeat process to enter teams' scores.\n After submitting the scores for the championship game the \n   top three contenders will be displayed!");
+        info.setText("INSTRUCTIONS:\n-For each game: Enter each team's score then \n   click"
+                        + " submit button between the two teams.\n-Scores must be positive"
+                        + " number and games \n   can not result in a tie\n-After " + ""
+                        + "completing all games for a " + ""
+                        + "round, move\n   on to next round and repeat process to " + ""
+                        + "enter teams' scores.\n After submitting the " + ""
+                        + "scores for the championship " + "" + "game the \n   "
+                        + "top three contenders will be displayed!");
         info.setFont(Font.font("Ariel", 15));
-        borderPane.setLeft((info));
+        borderPane.setRight((info));
         borderPane.setAlignment(info, Pos.CENTER);
 
         // Column headers for rounds
@@ -90,7 +99,8 @@ public class EightTeams extends Scene {
         Text round2 = createRoundHeader("Round 2");
         Text round3 = createRoundHeader("Round 3");
 
-
+        // Labels for Round 1 Competitors
+        // See helper method below
         Label label1 = createTeamLabel(teams, 0);
         Label label2 = createTeamLabel(teams, 7);
         Label label3 = createTeamLabel(teams, 3);
@@ -175,9 +185,9 @@ public class EightTeams extends Scene {
 
         // Creating Round 2 Submit Buttons
         // See helper method below
-        Button submit5 = createRnd3SubmitButton(gameOneLoser, winner1, winner2, winner5,
+        Button submit5 = createRnd2SubmitButton(gameOneLoser, winner1, winner2, winner5,
                         round3Score1, "5", round2Score1, round2Score2, champ, runnerUp);
-        Button submit6 = createRnd3SubmitButton(gameTwoLoser, winner3, winner4, winner6,
+        Button submit6 = createRnd2SubmitButton(gameTwoLoser, winner3, winner4, winner6,
                         round3Score2, "6", round2Score3, round2Score4, champ, runnerUp);
 
         // Create Championship Game Submit Button
@@ -190,26 +200,34 @@ public class EightTeams extends Scene {
                     champ.setText("Champion: ");
                     runnerUp.setText("Runner Up: ");
 
-                    int team1score = Integer.parseInt(round3Score1.getText().trim());
-                    int team2score = Integer.parseInt(round3Score2.getText().trim());
+                    int team1Score = Integer.parseInt(round3Score1.getText().trim());
+                    int team2Score = Integer.parseInt(round3Score2.getText().trim());
 
-                    if (team1score > team2score) {
+                    if (team1Score == team2Score) {
+                        createInvalidInputAlert("Score cannot be a tie!");
+                        return;
+                    }
+                    if (team1Score < 0 || team2Score < 0) { // Ensuring score input is non-negative
+                        createInvalidInputAlert("Scores must be positive!");
+                    } else if (team1Score > team2Score) {
                         champ.setText("Champion: " + winner5.getText());
                         runnerUp.setText("Runner Up: " + winner6.getText());
-                    } else if (team1score < team2score) {
+                    } else if (team1Score < team2Score) {
                         champ.setText("Champion: " + winner6.getText());
                         runnerUp.setText("Runner Up: " + winner5.getText());
                     } else {
-                        System.out.println("Teams may not have the same score");
+                        createInvalidInputAlert("Invalid Score Input!");
                     }
 
+                    // Determining 3rd place of tournament based of scores of the losers of semi
+                    // finals
                     if (gameOneLoser.getTeamScore() > gameTwoLoser.getTeamScore())
                         thirdPlace.setText("Third: " + gameOneLoser.getTeamName());
                     else
                         thirdPlace.setText("Third: " + gameTwoLoser.getTeamName());
 
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid Score");
+                    createInvalidInputAlert("Invalid Score Input!");
                 }
 
             }
@@ -225,7 +243,7 @@ public class EightTeams extends Scene {
         emptyCol3.setMinWidth(100);
 
 
-        //Adding column headers for each round to grid pane
+        // Adding column headers for each round to grid pane
         gPane.add(round1, 0, 0);
         gPane.add(round2, 3, 0);
         gPane.add(round3, 6, 0);
@@ -303,75 +321,6 @@ public class EightTeams extends Scene {
     }
 
     /**
-     * This method is a helper method to create the submit buttons for each of the games in round 3.
-     * It overrides the handle method of Button in order to correctly handle the user provided
-     * scores. It compares the values entered in the respective score fields and updates the correct
-     * team labels accordingly.
-     * 
-     * It begins by resetting the labels of any future games in the current teams path. This is to
-     * reset labels if user goes back and changes a games outcome after already moving farther
-     * forward in the bracket.
-     * 
-     * @param loser To store loser of game for runner up calculations later
-     * @param contestant1 The first competitor
-     * @param contestant2 The second competitor
-     * @param winner The winner of this game
-     * @param winnerNum The number of the winner label. To update winner label
-     * @param score1 Score of contestant1 in this game
-     * @param score2 Score of contestant2 in this game
-     * @param champ The label for champion of the tournament
-     * @param runnerUp The label runner up in the tournament
-     * @return submit The created Button
-     */
-    private Button createRnd3SubmitButton(Team loser, Label contestant1, Label contestant2,
-                    Label winner, TextField nextTextField, String winnerNum, TextField score1,
-                    TextField score2, Label champ, Label runnerUp) {
-        Button submit = new Button();
-        submit.setText("Submit Score");
-        submit.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    // Resetting labels of future games in these teams' subsequent path
-                    champ.setText("Champion: ");
-                    runnerUp.setText("Runner Up: ");
-                    winner.setText("Winner " + winnerNum + ": ");
-
-                    // Getting score results from text fields
-                    int team1Score = Integer.parseInt(score1.getText().trim());
-                    int team2Score = Integer.parseInt(score2.getText().trim());
-                    if(team1Score == team2Score) {
-                    	createInvalidInputAlert("Score cannot be a tie!");
-                    	return;
-                    }
-                    if (team1Score < 0 || team2Score < 0) { // Ensuring score input is non-negative
-                        createInvalidInputAlert("Scores must be positive!");
-                    } else if (team1Score > team2Score) {
-                        winner.setText(contestant1.getText()); // Updating winner label to winning
-                                                               // team
-                        nextTextField.setDisable(false);
-                        loser.setTeamName(contestant2.getText()); // Updating loser reference
-                        loser.setTeamScore(team2Score);
-                    } else if (team1Score < team2Score) {
-                        winner.setText(contestant2.getText());
-                        nextTextField.setDisable(false);
-                        loser.setTeamName(contestant1.getText());
-                        loser.setTeamScore(team1Score);
-                    } else {
-                        System.out.println("Teams may not have the same score");
-                    }
-
-                } catch (NumberFormatException e) {
-                	createInvalidInputAlert("Scores must be numbers!");
-                }
-
-            }
-        });
-        return submit;
-    }
-
-
-    /**
      * Used to create the submit buttons for each of the games in Round 1. Overrides handle method
      * of Button in order to correctly handle the user provided scores. Compares the values entered
      * in score fields and updates the correct team label for next round.
@@ -386,7 +335,9 @@ public class EightTeams extends Scene {
      * @param winner The winner of this game
      * @param winnerNum The number of the winner label. To reset winner label
      * @param nextWinner The winner of next rounds game. Used to reset label
-     * @param nextWinnerNum Number of the winner of next rounds game. Used to reset label
+     * @param nextwinnerNum Number of the winner of next rounds game. Used to reset label
+     * @param futureWinner The winner of the game 2 rounds from now. Used to reset label
+     * @param futureWinnerNum Number of the winner of game 2 rounds from now. Used to reset label
      * @param score1 Score of first team in this game
      * @param score2 Score of second team in this game
      * @param team1Index Index of first team in teams list
@@ -414,9 +365,10 @@ public class EightTeams extends Scene {
                     // Getting score results from text fields
                     int team1Score = Integer.parseInt(score1.getText().trim());
                     int team2Score = Integer.parseInt(score2.getText().trim());
-                    if(team1Score == team2Score) {
-                    	createInvalidInputAlert("Score cannot be a tie!");
-                    	return;
+
+                    if (team1Score == team2Score) {
+                        createInvalidInputAlert("Score cannot be a tie!");
+                        return;
                     }
                     if (team1Score < 0 || team2Score < 0) { // Ensuring score input is non-negative
                         createInvalidInputAlert("Scores must be positive!");
@@ -427,30 +379,100 @@ public class EightTeams extends Scene {
                         winner.setText(teams.get(team2Index).getTeamName());
                         nextTextField.setDisable(false);
                     } else {
-                        System.out.println("Teams may not have the same score");
+                        createInvalidInputAlert("Invalid Score Input!");
                     }
 
                 } catch (NumberFormatException e) {
-                	createInvalidInputAlert("Scores must be numbers!");
+                    createInvalidInputAlert("Invalid Score Input!");
                 }
 
             }
         });
         return submit;
     }
-    
-    /*
-     * Creates and shows an alert to inform user that their input for scores
-     * was invalid
+
+    /**
+     * This method is a helper method to create the submit buttons for each of the games in round 3.
+     * It overrides the handle method of Button in order to correctly handle the user provided
+     * scores. It compares the values entered in the respective score fields and updates the correct
+     * team labels accordingly.
      * 
-     * @param message Text to be displayed under the header 
+     * It begins by resetting the labels of any future games in the current teams path. This is to
+     * reset labels if user goes back and changes a games outcome after already moving farther
+     * forward in the bracket.
+     * 
+     * @param loser To store loser of game for runner up calculations later
+     * @param contestant1 The first competitor
+     * @param contestant2 The second competitor
+     * @param winner The winner of this game
+     * @param winnerNum The number of the winner label. To update winner label
+     * @param score1 Score of contestant1 in this game
+     * @param score2 Score of contestant2 in this game
+     * @param champ The label for champion of the tournament
+     * @param runnerUp The label runner up in the tournament
+     * @return submit The created Button
+     */
+    private Button createRnd2SubmitButton(Team loser, Label contestant1, Label contestant2,
+                    Label winner, TextField nextTextField, String winnerNum, TextField score1,
+                    TextField score2, Label champ, Label runnerUp) {
+        Button submit = new Button();
+        submit.setText("Submit Score");
+        submit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    // Resetting labels of future games in these teams' subsequent path
+                    champ.setText("Champion: ");
+                    runnerUp.setText("Runner Up: ");
+                    winner.setText("Winner " + winnerNum + ": ");
+
+                    // Getting score results from text fields
+                    int team1Score = Integer.parseInt(score1.getText().trim());
+                    int team2Score = Integer.parseInt(score2.getText().trim());
+
+                    if (team1Score == team2Score) {
+                        createInvalidInputAlert("Score cannot be a tie!");
+                        return;
+                    }
+
+                    if (team1Score < 0 || team2Score < 0) { // Ensuring score input is non-negative
+                        createInvalidInputAlert("Scores must be positive!");
+                    } else if (team1Score > team2Score) {
+                        winner.setText(contestant1.getText()); // Updating winner label to winning
+                                                               // team
+                        nextTextField.setDisable(false);
+
+                    } else if (team1Score < team2Score) {
+                        winner.setText(contestant2.getText());
+                        nextTextField.setDisable(false);
+                        loser.setTeamName(contestant1.getText());
+                        loser.setTeamScore(team1Score);
+                    } else {
+                        createInvalidInputAlert("Invalid Score Input!");
+                    }
+
+                } catch (NumberFormatException e) {
+                    createInvalidInputAlert("Invalid Score Input!");
+                }
+
+            }
+        });
+        return submit;
+    }
+
+    /*
+     * Creates and shows an alert to inform user that their input for scores was invalid
+     * 
+     * @param message Text to be displayed under the header
      */
     private void createInvalidInputAlert(String message) {
-    	Alert a = new Alert(AlertType.ERROR);
+        Alert a = new Alert(AlertType.ERROR);
         a.setHeaderText("Invalid Input");
         a.setContentText(message);
         a.show();
     }
+
+
     /*
      * Used to create labels for game that don't yet have a contestant assigned to them.
      * 
