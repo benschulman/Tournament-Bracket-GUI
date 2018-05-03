@@ -82,14 +82,18 @@ public class Main extends Application {
 			Text text = new Text("Champion: " + teams.get(0).getTeamName());
 			gridPane.add(text, 0, 0);
 		}
-		if (teams.size() == 2) //Runs the program for two teams
+		else if (teams.size() == 2) //Runs the program for two teams
 			scene = new TwoTeams(scrollPane, 1600, 900, Color.DARKGRAY, teams);
-		if (teams.size() == 4) //Runs the program for 4 teams
+		else if (teams.size() == 4) //Runs the program for 4 teams
 			scene = new FourTeams(scrollPane, 1600, 900, Color.DARKGRAY, teams);
-		if (teams.size() == 8) //Runs the program for 8 teams
+		else if (teams.size() == 8) //Runs the program for 8 teams
 			scene = new EightTeams(scrollPane, 1600, 900, Color.DARKGRAY, teams);
-		if (teams.size() == 16) //Runs the program for 16 teams
+		else if (teams.size() == 16) //Runs the program for 16 teams
 			scene = new SixteenTeams(scrollPane, 1600, 900, Color.DARKGRAY, teams);
+		else{
+			System.out.print("Invalid Number of teams!");
+			System.exit(-1);
+		}
 		scene.getStylesheets().add("application/style.css");
 
 		//Finally set the scene and show so it appears to the user.
