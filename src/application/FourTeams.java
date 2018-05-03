@@ -5,10 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -175,14 +172,21 @@ public class FourTeams extends Scene {
                     int team1score = Integer.parseInt(round2Score1.getText().trim());
                     int team2score = Integer.parseInt(round2Score2.getText().trim());
 
-                    if (team1score > team2score) {
+                    if (team1score == team2score) {
+                        createInvalidInputAlert("Score cannot be a tie!");
+                        return;
+                    }
+
+                    if (team1score < 0 || team2score < 0) { // Ensuring score input is non-negative
+                        createInvalidInputAlert("Scores must be positive!");
+                    } else if (team1score > team2score) {
                         champ.setText("Champion: " + winner1.getText());
                         runnerUp.setText("Runner Up: " + winner2.getText());
                     } else if (team1score < team2score) {
                         champ.setText("Champion: " + winner2.getText());
                         runnerUp.setText("Runner Up: " + winner1.getText());
                     } else {
-                        System.out.println("Teams may not have the same score");
+                        createInvalidInputAlert("Invalid Score Input!");
                     }
 
                     if (gameOneLoser.getTeamScore() > gameTwoLoser.getTeamScore())
@@ -191,7 +195,7 @@ public class FourTeams extends Scene {
                         thirdPlace.setText("Third: " + gameTwoLoser.getTeamName());
 
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid Score");
+                    createInvalidInputAlert("Invalid Score Input!");
                 }
 
             }
@@ -239,6 +243,18 @@ public class FourTeams extends Scene {
         gPane.add(champ, 6, 6);
         gPane.add(runnerUp, 6, 11);
         gPane.add(thirdPlace, 6, 12);
+    }
+
+    /*
+     * Creates and shows an alert to inform user that their input for scores was invalid
+     *
+     * @param message Text to be displayed under the header
+     */
+    private void createInvalidInputAlert(String message) {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setHeaderText("Invalid Input");
+        a.setContentText(message);
+        a.show();
     }
 
     /*
@@ -347,7 +363,14 @@ public class FourTeams extends Scene {
                     int team1Score = Integer.parseInt(score1.getText().trim());
                     int team2Score = Integer.parseInt(score2.getText().trim());
 
+                    if (team1Score == team2Score) {
+                        createInvalidInputAlert("Score cannot be a tie!");
+                        return;
+                    }
+
                     if (team1Score < 0 || team2Score < 0) { // Ensuring score input is non-negative
+                        createInvalidInputAlert("Scores must be positive!");
+                    } else if (team1Score < 0 || team2Score < 0) { // Ensuring score input is non-negative
                         System.out.println("Invalid Score: Scores must be positive");
                     } else if (team1Score > team2Score) {
                         winner.setText(teams.get(team1Index).getTeamName()); // Updating winner
@@ -362,11 +385,11 @@ public class FourTeams extends Scene {
                                                                                 // reference
                         loser.setTeamScore(team1Score);
                     } else {
-                        System.out.println("Teams may not have the same score");
+                        createInvalidInputAlert("Invalid Score Input!");
                     }
 
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid Score");
+                    createInvalidInputAlert("Invalid Score Input!");
                 }
 
             }
