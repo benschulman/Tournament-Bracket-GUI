@@ -5,10 +5,12 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -338,9 +340,12 @@ public class EightTeams extends Scene {
                     // Getting score results from text fields
                     int team1Score = Integer.parseInt(score1.getText().trim());
                     int team2Score = Integer.parseInt(score2.getText().trim());
-
+                    if(team1Score == team2Score) {
+                    	createInvalidInputAlert("Score cannot be a tie!");
+                    	return;
+                    }
                     if (team1Score < 0 || team2Score < 0) { // Ensuring score input is non-negative
-                        System.out.println("Invalid Score: Scores must be positive");
+                        createInvalidInputAlert("Scores must be positive!");
                     } else if (team1Score > team2Score) {
                         winner.setText(contestant1.getText()); // Updating winner label to winning
                                                                // team
@@ -357,7 +362,7 @@ public class EightTeams extends Scene {
                     }
 
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid Score");
+                	createInvalidInputAlert("Scores must be numbers!");
                 }
 
             }
@@ -409,9 +414,12 @@ public class EightTeams extends Scene {
                     // Getting score results from text fields
                     int team1Score = Integer.parseInt(score1.getText().trim());
                     int team2Score = Integer.parseInt(score2.getText().trim());
-
+                    if(team1Score == team2Score) {
+                    	createInvalidInputAlert("Score cannot be a tie!");
+                    	return;
+                    }
                     if (team1Score < 0 || team2Score < 0) { // Ensuring score input is non-negative
-                        System.out.println("Invalid Score: Scores must be positive");
+                        createInvalidInputAlert("Scores must be positive!");
                     } else if (team1Score > team2Score) {
                         winner.setText(teams.get(team1Index).getTeamName()); // Updating winner
                         nextTextField.setDisable(false);
@@ -423,14 +431,26 @@ public class EightTeams extends Scene {
                     }
 
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid Score");
+                	createInvalidInputAlert("Scores must be numbers!");
                 }
 
             }
         });
         return submit;
     }
-
+    
+    /*
+     * Creates and shows an alert to inform user that their input for scores
+     * was invalid
+     * 
+     * @param message Text to be displayed under the header 
+     */
+    private void createInvalidInputAlert(String message) {
+    	Alert a = new Alert(AlertType.ERROR);
+        a.setHeaderText("Invalid Input");
+        a.setContentText(message);
+        a.show();
+    }
     /*
      * Used to create labels for game that don't yet have a contestant assigned to them.
      * 
