@@ -436,7 +436,7 @@ public class SixteenTeams extends Scene {
      * @param winner The winner of this game
      * @param winnerNum The number of the winner label. To reset winner label
      * @param nextWinner The winner of next rounds game. Used to reset label
-     * @param nextwinnerNum Number of the winner of next rounds game. Used to reset label
+     * @param nextWinnerNum Number of the winner of next rounds game. Used to reset label
      * @param futureWinner The winner of the game 2 rounds from now. Used to reset label
      * @param futureWinnerNum Number of the winner of game 2 rounds from now. Used to reset label
      * @param score1 Score of first team in this game
@@ -506,7 +506,7 @@ public class SixteenTeams extends Scene {
      * @param winner The winner of this game
      * @param winnerNum The number of the winner label. To reset winner label
      * @param nextWinner The winner of next rounds game. Used to reset label
-     * @param nextwinnerNum Number of the winner of next rounds game. Used to reset label
+     * @param nextWinnerNum Number of the winner of next rounds game. Used to reset label
      * @param score1 Score of first team in this game
      * @param score2 Score of second team in this game
      * @param contestant1 The first competitor
